@@ -1,0 +1,73 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-pv-volume-twin
+  labels:
+    type: local
+    app: postgres-twin
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres-pv-claim-twin
+  labels:
+    app: postgres-twin
+spec:
+  #storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-twin
+spec:
+  selector:
+    matchLabels:
+      app: postgres-twin
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres-twin
+    spec:
+      containers:
+        - name: postgres-twin
+          image: postgres:10.4
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-config-twin
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgredb
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim-twin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-twin
+  labels:
+    app: postgres-twin
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-twin

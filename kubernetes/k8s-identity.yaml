@@ -1,0 +1,108 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: identity-pv-volume
+  labels:
+    type: local
+    app: identity
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 0.5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: identity-pv-claim
+  labels:
+    app: identity
+spec:
+  #storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 0.5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity
+spec:
+  selector:
+    matchLabels:
+      app: identity
+      tier: frontend
+      track: stable
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: identity
+        tier: frontend
+        track: stable
+    spec:
+      containers:
+        - name: identity
+          image: sonicblue/iot-identity
+          volumeMounts:
+            - name: certs
+              mountPath: /srv/certs
+            - name: config
+              mountPath: /srv/config
+          env:
+            - name: PORT
+              value: "8030"
+            - name: DRIVER
+              value: "postgres"
+            - name: DATASOURCE
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config-identity
+                  key: DATASOURCE
+            - name: MQTTURL
+              value: "mqtt"
+            - name: MQTTPORT
+              value: "8883"
+            - name: CERTSDIR
+              value: "/srv/certs"
+          ports:
+            - containerPort: 8030
+      volumes:
+        - name: certs
+          secret:
+            secretName: identity-certs
+        - name: config
+          persistentVolumeClaim:
+            claimName: identity-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity
+spec:
+  selector:
+    app: identity
+    tier: frontend
+  ports:
+    - port: 8030
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-port
+spec:
+  selector:
+    app: identity
+  type: NodePort
+  ports:
+    - name: http
+      port: 8030
+      targetPort: 8030
+      nodePort: 30300
+      protocol: TCP
