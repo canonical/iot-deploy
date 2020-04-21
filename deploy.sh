@@ -55,6 +55,7 @@ deploy_config () {
     sudo microk8s kubectl create -f postgres-twin.yaml
     sudo microk8s kubectl create -f postgres-man.yaml
     sudo microk8s kubectl create -f management-config.yaml
+    sudo microk8s kubectl create -f identity-config.yaml
 
     cd ..
 }

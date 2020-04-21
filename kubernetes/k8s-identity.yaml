@@ -65,9 +65,15 @@ spec:
                   name: postgres-config-identity
                   key: DATASOURCE
             - name: MQTTURL
-              value: "mqtt"
+              valueFrom:
+                configMapKeyRef:
+                  name: identity-config
+                  key: MQTTURL
             - name: MQTTPORT
-              value: "8883"
+              valueFrom:
+                configMapKeyRef:
+                  name: identity-config
+                  key: MQTTPORT
             - name: CERTSDIR
               value: "/srv/certs"
           ports:
