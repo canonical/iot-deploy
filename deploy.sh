@@ -48,7 +48,7 @@ generate_config () {
 
 deploy_config () {
     cd certs
-    for y in mqtt identity devicetwin postgres-id postgres-twin postgres-man management-config identity-config influxdb-config
+    for y in mqtt identity devicetwin postgres-id postgres-twin postgres-man management-config identity-config influxdb-config mqttinflux-config
     do
       sudo microk8s kubectl create -f "$y.yaml"
     done
@@ -57,7 +57,7 @@ deploy_config () {
 }
 
 deploy_services () {
-    for y in mosquitto postgres-twin postgres-id postgres-man devicetwin identity management influxdb grafana
+    for y in mosquitto postgres-twin postgres-id postgres-man devicetwin identity management influxdb grafana mqttinfluxdb
     do
       sudo microk8s kubectl create -f "kubernetes/k8s-$y.yaml"
     done

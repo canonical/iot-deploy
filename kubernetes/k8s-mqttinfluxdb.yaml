@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-influx
+spec:
+  selector:
+    matchLabels:
+      app: mqtt-influx
+      track: stable
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mqtt-influx
+        track: stable
+    spec:
+      containers:
+        - name: mqtt-influx
+          image: sonicblue/mqtt-influx
+          envFrom:
+            - configMapRef:
+                name: mqttinflux-config
+          volumeMounts:
+            - name: certs
+              mountPath: /mosquitto/certs
+      volumes:
+        - name: certs
+          secret:
+            secretName: devicetwin-certs

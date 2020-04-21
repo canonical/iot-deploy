@@ -24,6 +24,13 @@ be used when access the service via a browser e.g. http://<ip-or-domain-name>:30
 cd iot-deploy
 ./deploy.sh <ip-or-domain-name>
 ```
+The services will take some time to load, especially the databases as they need
+to be initialized. The process can be monitored via:
+```bash
+sudo microk8s kubectl get pods
+```
+Some pods will have an error status as they wait for other services to
+load, but Kubernetes will handle the retries until all the services are running.
 
 ## Register the super user with the services
 User authentication is done via Ubuntu SSO. Run the script to register a user
@@ -32,3 +39,9 @@ with the service. Other users can then be created via the web interface.
 cd iot-deploy
 ./createuser.sh <usso-username>
 ```
+
+## Service URLs
+- Management web interface: http://<ip-or-domain-name>:30100
+- Identity service: http://<ip-or-domain-name>:30300
+- MQTT service: http://<ip-or-domain-name>:30883
+- Grafana web interface: http://<ip-or-domain-name>:30000
