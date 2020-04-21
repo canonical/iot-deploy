@@ -28,7 +28,10 @@ spec:
                   name: postgres-config-man
                   key: DATASOURCE
             - name: HOST
-              value: "management:8010"
+              valueFrom:
+                configMapKeyRef:
+                  name: management-config
+                  key: HOST
             - name: SCHEME
               value: "http"
             - name: IDENTITYAPI
