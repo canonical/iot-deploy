@@ -48,26 +48,19 @@ generate_config () {
 
 deploy_config () {
     cd certs
-    sudo microk8s kubectl create -f mqtt.yaml
-    sudo microk8s kubectl create -f identity.yaml
-    sudo microk8s kubectl create -f devicetwin.yaml
-    sudo microk8s kubectl create -f postgres-id.yaml
-    sudo microk8s kubectl create -f postgres-twin.yaml
-    sudo microk8s kubectl create -f postgres-man.yaml
-    sudo microk8s kubectl create -f management-config.yaml
-    sudo microk8s kubectl create -f identity-config.yaml
+    for y in mqtt identity devicetwin postgres-id postgres-twin postgres-man management-config identity-config influxdb-config
+    do
+      sudo microk8s kubectl create -f "$y.yaml"
+    done
 
     cd ..
 }
 
 deploy_services () {
-    sudo microk8s kubectl create -f kubernetes/k8s-mosquitto.yaml
-    sudo microk8s kubectl create -f kubernetes/k8s-postgres-twin.yaml
-    sudo microk8s kubectl create -f kubernetes/k8s-postgres-id.yaml
-    sudo microk8s kubectl create -f kubernetes/k8s-postgres-man.yaml
-    sudo microk8s kubectl create -f kubernetes/k8s-devicetwin.yaml
-    sudo microk8s kubectl create -f kubernetes/k8s-identity.yaml
-    sudo microk8s kubectl create -f kubernetes/k8s-management.yaml
+    for y in mosquitto postgres-twin postgres-id postgres-man devicetwin identity management influxdb grafana
+    do
+      sudo microk8s kubectl create -f "kubernetes/k8s-$y.yaml"
+    done
 }
 
 HOST_IP=$1
