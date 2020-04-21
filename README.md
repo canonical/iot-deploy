@@ -1,10 +1,19 @@
 # Deploy the Iot Device Management services
+The IOT Device Management service manages and monitors IoT devices running Ubuntu or Ubuntu Core.
+ ![IoT Management Solution Overview](https://raw.githubusercontent.com/CanonicalLtd/iot-management/master/docs/IoTManagement.svg)
 
-Scripts to simplify the installation of the IoT Device Management services for
-testing purposes. The services are deployed on a machine using microk8s.
+The application is based on a number of microservices:
+- [IoT Management](https://github.com/CanonicalLtd/iot-management)
+- [IoT Identity](https://github.com/CanonicalLtd/iot-identity)
+- [IoT Device Twin](https://github.com/CanonicalLtd/iot-devicetwin)
 
-If using `multipass`, increase the size of the virtual machine e.g.
-`multipass launch -n iot -m 2048M -d 20G`
+The device agent:
+- [IoT Agent](https://github.com/CanonicalLtd/iot-agent)
+
+
+The scripts in this project simplify the installation of the IoT Device Management services for
+testing purposes. The services are deployed on a machine using microk8s. If using `multipass`,
+increase the size of the virtual machine e.g. `multipass launch -n iot -m 2048M -d 20G`
 
 
 ## Install the services
