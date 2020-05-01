@@ -60,7 +60,7 @@ data:
   MQTT_PORT: "8883"
   MQTT_USER: ""
   MQTT_PASSWORD: ""
-  MQTT_TOPICS: "metrics,metrics/*"
+  MQTT_TOPICS: "metrics,metrics/+"
   MQTT_TLS: "true"
   MQTT_TLS_CA: /mosquitto/certs/ca.crt
   MQTT_TLS_CERT: /mosquitto/certs/server.crt
