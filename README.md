@@ -19,7 +19,7 @@ increase the size of the virtual machine e.g. `multipass launch -n iot -m 2048M 
 ## Install the services
 Automated installation of microk8s and the management services. The script needs
 the IP address of the machine that is being used for the installation. This will
-be used when access the service via a browser e.g. http://<ip-or-domain-name>:30100
+be used when access the service via a browser e.g. http://ip-or-domain-name:30100
 ```bash
 cd iot-deploy
 ./deploy.sh <ip-or-domain-name>
@@ -41,7 +41,20 @@ cd iot-deploy
 ```
 
 ## Service URLs
-- Management web interface: http://<ip-or-domain-name>:30100
-- Identity service: http://<ip-or-domain-name>:30300
-- MQTT service: http://<ip-or-domain-name>:30883
-- Grafana web interface: http://<ip-or-domain-name>:30000
+- Management web interface: http://ip-or-domain-name:30100
+- Identity service: http://ip-or-domain-name:30300
+- MQTT service: http://ip-or-domain-name:30883
+- Grafana web interface: http://ip-or-domain-name:30000
+
+## Testing the Agent
+The agent can be installed on any Ubuntu device that has access to the ip-or-domain-name. The details of the serial assertion from the device need to be registered with the Identity service by using the Management web interface (Devices > Register in the menu). The details of the brand, model and serial number can be found by running this command on the device:
+```
+snap known serial
+```
+
+The agent can be installed from the Snap Store and then needs to be configured with the URL to the identity service e.g.
+```
+sudo snap install --edge --devmode iot-agent
+sudo snap set iot-agent url=http://ip-or-domain-name:30300/
+```
+Once installed and configured, the agent will enrol with the Identity service and will be visible in the Management service.
