@@ -1,4 +1,14 @@
 # Deploy the Iot Device Management services
+
+**DEPRECATION NOTICE** - this repository refers to container images which are based on Ubuntu 18.04 LTS, and
+some of them (IoT Identity) use older assertion formats which result in a failure to onboard devices running
+more recent versions of Ubuntu Core. As such, the scripts contained in this repository (and the images used
+by these scripts) are considered deprecated. For those wanting to run these services for development and/or
+evaluation, our current recomendation is to build your own container images using the build files provided
+in each of the service repositories.
+
+***
+
 The IOT Device Management service manages and monitors IoT devices running Ubuntu or Ubuntu Core.
  ![IoT Management Solution Overview](https://raw.githubusercontent.com/CanonicalLtd/iot-management/master/docs/IoTManagement.svg)
 
